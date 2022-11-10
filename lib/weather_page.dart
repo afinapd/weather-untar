@@ -12,21 +12,24 @@ class WeatherPage extends StatefulWidget {
 }
 
 class _WeatherPageeState extends State<WeatherPage> {
-  late double temperature;
-  late String weatherIcon;
-  late String cityName;
+  late String temperature = "";
+  late String weatherIcon = "";
+  late String cityName = "";
+  late bool isLoading = true;
 
   @override
   void initState() {
     super.initState();
-    this.updateUI;
+    updateUI();
   }
 
-  void updateUI() {
+  void updateUI() async {
+    WeatherService data = await widget.weatherService.getWeatherData();
     setState(() {
-      temperature = widget.weatherService.temperature;
-      weatherIcon = widget.weatherService.weatherIcon;
-      cityName = widget.weatherService.cityName;
+      temperature = data.temperature;
+      weatherIcon = data.weatherIcon;
+      cityName = data.cityName;
+      isLoading = false;
     });
   }
 
@@ -36,12 +39,16 @@ class _WeatherPageeState extends State<WeatherPage> {
       body: SafeArea(
         child: Center(
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Image(
                   image: NetworkImage(
-                      'https://openweathermap.org/themes/openweathermap/assets/img/logo_white_cropped.png')),
-              Text(cityName, style: GoogleFonts.redressed(fontSize: 40)),
-              Text('$temperature Celcius', style: TextStyle(fontSize: 40))
+                      'https://images.squarespace-cdn.com/content/v1/5572b7b4e4b0a20071d407d4/1487090945812-ZXZ9Q4BLVPDRYU9M2D8K/07-Weather.png'),
+                width: 120,
+                height: 120,),
+              Text(!isLoading ? cityName : "loading ... ", style: GoogleFonts.redressed(fontSize: 50)),
+              Text(!isLoading ? '$temperature Celcius': "loading ... ", style: TextStyle(fontSize: 20))
             ],
           ),
         ),

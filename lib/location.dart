@@ -6,12 +6,13 @@ class LocationService{
 
   Future<dynamic> getCurrentLocation() async{
     try{
+      await Geolocator.requestPermission();
       Position currentPosition = await Geolocator
           .getCurrentPosition(desiredAccuracy: LocationAccuracy.best);
-      this.latitude = currentPosition.latitude;
-      this.longitude=currentPosition.longitude;
-      print(this.latitude);
-      print(this.longitude);
+      latitude = currentPosition.latitude;
+      longitude=currentPosition.longitude;
+      print(latitude);
+      print(longitude);
     } catch(e){
       print(e);
     }
